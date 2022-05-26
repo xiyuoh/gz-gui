@@ -33,23 +33,49 @@ char* g_argv[] =
 using namespace ignition;
 using namespace gui;
 
+auto kExampleConfigPath = common::joinPaths(PROJECT_SOURCE_PATH,
+    "examples", "config");
+
+//////////////////////////////////////////////////
+/// Generate a list of examples to be built.
+std::vector<std::string> GetExamples()
+{
+  std::vector<std::string> examples;
+
+  // Iterate over directory
+  ignition::common::DirIter endIter;
+  for (ignition::common::DirIter dirIter(kExampleConfigPath);
+      dirIter != endIter; ++dirIter)
+  {
+    auto base = ignition::common::basename(*dirIter);
+    examples.push_back(base.erase(base.find(".config"), 7));
+  }
+  return examples;
+}
+
+//////////////////////////////////////////////////
+class PluginsLoad: public ::testing::TestWithParam<std::string>
+{
+  /// \brief Build code in a temporary build folder.
+  /// \param[in] _entry Example source code to build
+  public: void Load(const std::string &_config);
+};
+
 // See https://github.com/ignitionrobotics/ign-gui/issues/75
 /////////////////////////////////////////////////
-TEST(ExampleTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Configs))
+TEST_P(PluginsLoad, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Configs))
 {
   common::Console::SetVerbosity(4);
-  auto exampleConfigPath = common::joinPaths(std::string(PROJECT_SOURCE_PATH),
-      "examples", "config");
 
-  // Load each config file
-  ignition::common::DirIter endIter;
-  for (common::DirIter file(exampleConfigPath); file != endIter; ++file)
-  {
-    igndbg << *file << std::endl;
-
-    Application app(g_argc, g_argv);
-    app.AddPluginPath(std::string(PROJECT_BINARY_PATH) + "/lib");
-
-    EXPECT_TRUE(app.LoadConfig(*file));
-  }
+  auto file = common::joinPaths(kExampleConfigPath, GetParam()) + ".config";
+  Application app(g_argc, g_argv);
+  app.AddPluginPath(common::joinPaths(PROJECT_BINARY_PATH, "lib"));
+  EXPECT_TRUE(app.LoadConfig(file));
 }
+
+//////////////////////////////////////////////////
+INSTANTIATE_TEST_SUITE_P(Example, PluginsLoad,
+    ::testing::ValuesIn(GetExamples()),
+    [](const ::testing::TestParamInfo<PluginsLoad::ParamType>& param) {
+      return param.param;
+    });
