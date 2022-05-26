@@ -73,7 +73,8 @@ TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadPlugin))
   EXPECT_TRUE(app.LoadPlugin("Publisher"));
 }
 //////////////////////////////////////////////////
-TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNonexistantPlugin))
+TEST(ApplicationTest,
+    IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNonexistantPlugin))
 {
   ignition::common::Console::SetVerbosity(4);
   // No Qt app
@@ -85,7 +86,8 @@ TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNonexistantPlugin
 }
 
 //////////////////////////////////////////////////
-TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadProgrammaticPlugin))
+TEST(ApplicationTest,
+    IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadProgrammaticPlugin))
 {
   ignition::common::Console::SetVerbosity(4);
   // No Qt app
@@ -128,7 +130,8 @@ TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadEnvPlugin))
 }
 
 //////////////////////////////////////////////////
-TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadBadInheritancePlugin))
+TEST(ApplicationTest,
+    IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadBadInheritancePlugin))
 {
   ignition::common::Console::SetVerbosity(4);
   // No Qt app
@@ -140,7 +143,8 @@ TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadBadInheritancePlu
 }
 
 //////////////////////////////////////////////////
-TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNotRegisteredPlugin))
+TEST(ApplicationTest,
+    IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNotRegisteredPlugin))
 {
   ignition::common::Console::SetVerbosity(4);
   // No Qt app
@@ -152,7 +156,8 @@ TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadNotRegisteredPlug
 }
 
 //////////////////////////////////////////////////
-TEST(ApplicationTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadInvalidQmlPlugin))
+TEST(ApplicationTest,
+    IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(LoadInvalidQmlPlugin))
 {
   ignition::common::Console::SetVerbosity(4);
   // No Qt app
