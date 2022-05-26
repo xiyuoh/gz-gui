@@ -175,8 +175,7 @@ Application::~Application()
     }
     if (this->dataPtr->mainWin->QuickWindow()->isVisible())
       this->dataPtr->mainWin->QuickWindow()->close();
-    delete this->dataPtr->mainWin;
-    this->dataPtr->mainWin = nullptr;
+    this->dataPtr->mainWin->deleteLater();
   }
 
   for (auto dialog : this->dataPtr->dialogs)
@@ -188,9 +187,7 @@ Application::~Application()
   this->dataPtr->dialogs.clear();
 
   if (this->dataPtr->engine)
-  {
-    this->dataPtr->engine->deleteLater();
-  }
+    delete this->dataPtr->engine;
 
   std::queue<std::shared_ptr<Plugin>> empty;
   std::swap(this->dataPtr->pluginsToAdd, empty);
