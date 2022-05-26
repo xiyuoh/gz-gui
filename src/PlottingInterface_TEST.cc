@@ -172,8 +172,9 @@ TEST(PlottingInterfaceTest, IGN_UTILS_TEST_DISABLED_ON_WIN32(Transport))
 
   auto transport = Transport();
 
-  double time = 10;
-  std::shared_ptr<double> timeRef(&time);
+  double *time = new double;
+  *time = 10;
+  std::shared_ptr<double> timeRef(time);
 
   transport.Subscribe("/collision_topic", "pose-position-x", 1, timeRef);
   transport.Subscribe("/collision_topic", "pose-position-z", 1, timeRef);

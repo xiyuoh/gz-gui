@@ -53,7 +53,7 @@ TEST(Scene3DTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Load))
   Application app(g_argc, g_argv);
   app.AddPluginPath(std::string(PROJECT_BINARY_PATH) + "/lib");
 
-  EXPECT_TRUE(app.LoadPlugin("Scene3D"));
+  ASSERT_TRUE(app.LoadPlugin("Scene3D"));
 
   // Get main window
   auto win = app.findChild<MainWindow *>();
@@ -91,7 +91,7 @@ TEST(Scene3DTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
 
   tinyxml2::XMLDocument pluginDoc;
   pluginDoc.Parse(pluginStr);
-  EXPECT_TRUE(app.LoadPlugin("Scene3D",
+  ASSERT_TRUE(app.LoadPlugin("Scene3D",
       pluginDoc.FirstChildElement("plugin")));
 
   // Get main window
@@ -141,7 +141,9 @@ TEST(Scene3DTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
   }
   win->QuickWindow()->close();
   engine->DestroyScene(scene);
-  rendering::unloadEngine(engine->Name());
+
+  // \TODO(mjcarroll) Re-enable unloadEngine when it works correctly
+  // EXPECT_TRUE(rendering::unloadEngine(engine->Name()));
 }
 
 /////////////////////////////////////////////////
