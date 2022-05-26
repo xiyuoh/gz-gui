@@ -41,6 +41,9 @@
 #include "ignition/gui/Plugin.hh"
 #include "ignition/gui/MainWindow.hh"
 
+#include "backward.hpp"
+backward::SignalHandling sh;
+
 int g_argc = 1;
 char* g_argv[] =
 {
