@@ -78,7 +78,7 @@ std::vector<ExampleEntry> GetExamples()
 class ExamplesBuild : public ::testing::TestWithParam<ExampleEntry>
 {
   /// \brief Build code in a temporary build folder.
-  /// \param[in] _entry Example source code to build 
+  /// \param[in] _entry Example source code to build
   public: void Build(const ExampleEntry &_entry);
 };
 

@@ -264,6 +264,6 @@ TEST(TransportSceneManagerTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
   win->QuickWindow()->close();
   engine->DestroyScene(scene);
   // \TODO(mjcarroll) Re-enable unloadEngine when it works correctly
-  //EXPECT_TRUE(rendering::unloadEngine(engine->Name()));
+  // EXPECT_TRUE(rendering::unloadEngine(engine->Name()));
 }
 
