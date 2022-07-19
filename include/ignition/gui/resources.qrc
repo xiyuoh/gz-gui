@@ -3,9 +3,6 @@
   <file>qtquickcontrols2.conf</file>
 
   <file>qml/Chart.qml</file>
-  <file>qml/GzColor.qml</file>
-  <file>qml/GzPose.qml</file>
-  <file>qml/GzVector3.qml</file>
   <file>qml/IgnCard.qml</file>
   <file>qml/IgnCardSettings.qml</file>
   <file>qml/IgnHelpers.qml</file>
@@ -15,6 +12,7 @@
   <file>qml/IgnSpinBox.qml</file>
   <file>qml/IgnSplit.qml</file>
   <file>qml/Main.qml</file>
+  <file>qml/Multiview.qml</file>
   <file>qml/PlottingInterface.qml</file>
   <file>qml/PluginMenu.qml</file>
   <file>qml/SideDrawer.qml</file>
@@ -31,9 +29,6 @@
     <!-- This qmldir file defines a QML module that can be imported -->
     <file alias="qmldir">qml/qmldir</file>
     <!-- Add any QML components referenced in the qmldir file here -->
-    <file alias="GzColor.qml">qml/GzColor.qml</file>
-    <file alias="GzPose.qml">qml/GzPose.qml</file>
-    <file alias="GzVector3.qml">qml/GzVector3.qml</file>
     <file alias="IgnSnackBar.qml">qml/IgnSnackBar.qml</file>
     <file alias="IgnSpinBox.qml">qml/IgnSpinBox.qml</file>
 </qresource>

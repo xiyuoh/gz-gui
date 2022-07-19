@@ -130,6 +130,18 @@ ApplicationWindow
     saveFileDialog.open()
   }
 
+  /**
+   * Toggle ToolBar visibility
+   */
+  function toggleToolBar() {
+    if(topToolBar.visible == true)
+    {
+      topToolBar.visible = false
+    } else {
+      topToolBar.visible = true
+    }
+  }
+
   // Shortcuts (why not working on menu?)
   Shortcut {
     sequence: "Ctrl+O"
@@ -156,10 +168,27 @@ ApplicationWindow
     onActivated: pluginMenu.open()
   }
 
+  Shortcut {
+    sequence: "Ctrl+Shift+F"
+    onActivated: toggleToolBar()
+  }
+
+  Shortcut {
+    sequence: "Ctrl+F"
+    onActivated: showFullScreen()
+  }
+
+  Shortcut {
+    sequence: "Esc"
+    onActivated: show()
+  }
+
   /**
    * Top toolbar
    */
   header: ToolBar {
+    id: topToolBar
+    visible: true
     Material.background: toolBarColor
     Material.foreground: Material.foreground
 
@@ -193,6 +222,23 @@ ApplicationWindow
           source: "images/drawer.png"
         }
         onClicked: drawer.open()
+      }
+
+      Button {
+        anchors.centerIn: parent
+        text: qsTr("Press to open Multiview window")
+
+        onClicked: {
+          var component = Qt.createComponent("Multiview.qml");
+          if (component.status != Component.Ready) {
+            if (component.status == Component.Error) {
+              console.debug("Error: " + component.errorString());
+              return;
+            }
+          }
+          var multiview = component.createObject(window);
+          multiview.show();
+        }
       }
 
       // Padding for title
