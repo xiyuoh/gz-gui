@@ -16,11 +16,11 @@
 */
 
 #include <iostream>
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 #include "HelloPlugin.hh"
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 
 /////////////////////////////////////////////////
@@ -53,5 +53,5 @@ void HelloPlugin::OnButton()
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::HelloPlugin,
-                    ignition::gui::Plugin);
+IGNITION_ADD_PLUGIN(HelloPlugin,
+                    gui::Plugin);

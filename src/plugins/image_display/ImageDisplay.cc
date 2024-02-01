@@ -17,21 +17,18 @@
 
 #include "ImageDisplay.hh"
 
-#include <QQuickImageProvider>
-
-#include <algorithm>
 #include <iostream>
 #include <limits>
 #include <string>
 #include <vector>
 
-#include <ignition/common/Console.hh>
-#include <ignition/common/Image.hh>
-#include <ignition/plugin/Register.hh>
-#include <ignition/transport/Node.hh>
+#include <gz/common/Console.hh>
+#include <gz/common/Image.hh>
+#include <gz/plugin/Register.hh>
+#include <gz/transport/Node.hh>
 
-#include "ignition/gui/Application.hh"
-#include "ignition/gui/MainWindow.hh"
+#include "gz/gui/Application.hh"
+#include "gz/gui/MainWindow.hh"
 
 namespace ignition
 {
@@ -39,37 +36,6 @@ namespace gui
 {
 namespace plugins
 {
-  class ImageProvider : public QQuickImageProvider
-  {
-    public: ImageProvider()
-       : QQuickImageProvider(QQuickImageProvider::Image)
-    {
-    }
-
-    public: QImage requestImage(const QString &, QSize *,
-        const QSize &) override
-    {
-      if (!this->img.isNull())
-      {
-        // Must return a copy
-        QImage copy(this->img);
-        return copy;
-      }
-
-      // Placeholder in case we have no image yet
-      QImage i(400, 400, QImage::Format_RGB888);
-      i.fill(QColor(128, 128, 128, 100));
-      return i;
-    }
-
-    public: void SetImage(const QImage &_image)
-    {
-      this->img = _image;
-    }
-
-    private: QImage img;
-  };
-
   class ImageDisplayPrivate
   {
     /// \brief List of topics publishing image messages.
@@ -91,7 +57,7 @@ namespace plugins
 }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 using namespace plugins;
 
@@ -163,7 +129,8 @@ void ImageDisplay::ProcessImage()
     case msgs::PixelFormatType::RGB_INT8:
       // copy image data buffer directly to QImage
       image = QImage(reinterpret_cast<const uchar *>(
-          this->dataPtr->imageMsg.data().c_str()), width, height, qFormat);
+          this->dataPtr->imageMsg.data().c_str()), width, height,
+          3 * width, qFormat);
       break;
     // for other cases, convert to RGB common::Image
     case msgs::PixelFormatType::R_FLOAT32:
@@ -236,7 +203,11 @@ void ImageDisplay::OnTopic(const QString _topic)
 {
   auto topic = _topic.toStdString();
   if (topic.empty())
+  {
+    // LCOV_EXCL_START
     return;
+    // LCOV_EXCL_STOP
+  }
 
   // Unsubscribe
   auto subs = this->dataPtr->node.SubscribedTopics();
@@ -247,8 +218,10 @@ void ImageDisplay::OnTopic(const QString _topic)
   if (!this->dataPtr->node.Subscribe(topic, &ImageDisplay::OnImageMsg,
       this))
   {
+    // LCOV_EXCL_START
     ignerr << "Unable to subscribe to topic [" << topic << "]" << std::endl;
     return;
+    // LCOV_EXCL_STOP
   }
   App()->findChild<MainWindow *>()->notifyWithDuration(
     QString::fromStdString("Subscribed to: <b>" + topic + "</b>"), 4000);
@@ -297,5 +270,5 @@ void ImageDisplay::SetTopicList(const QStringList &_topicList)
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::plugins::ImageDisplay,
-                    ignition::gui::Plugin)
+IGNITION_ADD_PLUGIN(ImageDisplay,
+                    gui::Plugin)

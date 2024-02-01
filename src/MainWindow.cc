@@ -19,15 +19,15 @@
 #include <regex>
 #include <string>
 
-#include <ignition/common/Console.hh>
-#include <ignition/common/Filesystem.hh>
-#include "ignition/gui/Application.hh"
-#include "ignition/gui/MainWindow.hh"
-#include "ignition/gui/Plugin.hh"
-#include "ignition/gui/qt.h"
-#include "ignition/msgs/boolean.pb.h"
-#include "ignition/msgs/server_control.pb.h"
-#include "ignition/transport/Node.hh"
+#include <gz/common/Console.hh>
+#include <gz/common/Filesystem.hh>
+#include "gz/gui/Application.hh"
+#include "gz/gui/MainWindow.hh"
+#include "gz/gui/Plugin.hh"
+#include "gz/gui/qt.h"
+#include "gz/msgs/boolean.pb.h"
+#include "gz/msgs/server_control.pb.h"
+#include "gz/transport/Node.hh"
 
 namespace ignition
 {
@@ -76,17 +76,17 @@ namespace ignition
       public: std::string controlService{"/server_control"};
 
       /// \brief Communication node
-      public: ignition::transport::Node node;
+      public: gz::transport::Node node;
     };
   }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 
 /// \brief Strip last component from a path.
 /// \return Original path without its last component.
-/// \ToDo: Move this function to ignition::common::Filesystem
+/// \ToDo: Move this function to common::Filesystem
 std::string dirName(const std::string &_path)
 {
   std::size_t found = _path.find_last_of("/\\");
@@ -99,7 +99,7 @@ MainWindow::MainWindow()
 {
   // Expose the ExitAction enum to QML via ExitAction 1.0 module
   qRegisterMetaType<ExitAction>("ExitAction");
-  qmlRegisterUncreatableMetaObject(ignition::gui::staticMetaObject,
+  qmlRegisterUncreatableMetaObject(gui::staticMetaObject,
     "ExitAction", 1, 0, "ExitAction", "Error: namespace enum");
 
   // Make MainWindow functions available from all QML files (using root)
@@ -196,8 +196,8 @@ void MainWindow::OnSaveConfigAs(const QString &_path)
 /////////////////////////////////////////////////
 void MainWindow::OnStopServer()
 {
-  std::function<void(const ignition::msgs::Boolean &, const bool)> cb =
-    [](const ignition::msgs::Boolean &_rep, const bool _result)
+  std::function<void(const msgs::Boolean &, const bool)> cb =
+    [](const msgs::Boolean &_rep, const bool _result)
     {
       if (_rep.data() && _result)
       {
@@ -211,7 +211,7 @@ void MainWindow::OnStopServer()
       }
     };
 
-  ignition::msgs::ServerControl req;
+  msgs::ServerControl req;
   req.set_stop(true);
   const auto success = this->dataPtr->node.Request(
     this->dataPtr->controlService, req, cb);
@@ -240,7 +240,7 @@ void MainWindow::SaveConfig(const std::string &_path)
   // Create the intermediate directories if needed.
   // We check for errors when we try to open the file.
   auto dirname = dirName(_path);
-  ignition::common::createDirectories(dirname);
+  common::createDirectories(dirname);
 
   // Open the file
   std::ofstream out(_path.c_str(), std::ios::out);

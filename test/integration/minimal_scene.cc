@@ -17,21 +17,21 @@
 
 #include <gtest/gtest.h>
 #include <QtTest/QtTest>
-#include <ignition/common/Console.hh>
-#include <ignition/math/Color.hh>
-#include <ignition/math/Pose3.hh>
-#include <ignition/rendering/Camera.hh>
-#include <ignition/rendering/RenderEngine.hh>
-#include <ignition/rendering/RenderingIface.hh>
-#include <ignition/rendering/Scene.hh>
-#include <ignition/utilities/ExtraTestMacros.hh>
+#include <gz/common/Console.hh>
+#include <gz/math/Color.hh>
+#include <gz/math/Pose3.hh>
+#include <gz/rendering/Camera.hh>
+#include <gz/rendering/RenderEngine.hh>
+#include <gz/rendering/RenderingIface.hh>
+#include <gz/rendering/Scene.hh>
+#include <gz/utilities/ExtraTestMacros.hh>
 
 #include "test_config.h"  // NOLINT(build/include)
 #include "../helpers/TestHelper.hh"
-#include "ignition/gui/Application.hh"
-#include "ignition/gui/GuiEvents.hh"
-#include "ignition/gui/Plugin.hh"
-#include "ignition/gui/MainWindow.hh"
+#include "gz/gui/Application.hh"
+#include "gz/gui/GuiEvents.hh"
+#include "gz/gui/Plugin.hh"
+#include "gz/gui/MainWindow.hh"
 
 int g_argc = 1;
 char* g_argv[] =
@@ -39,7 +39,7 @@ char* g_argv[] =
   reinterpret_cast<char*>(const_cast<char*>("./MinimalScene_TEST")),
 };
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 
 /////////////////////////////////////////////////
@@ -90,12 +90,14 @@ TEST(MinimalSceneTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
       "  <far>5000</far>"
       "</camera_clip>"
       "<horizontal_fov>60</horizontal_fov>"
+      "<view_controller>ortho</view_controller>"
     "</plugin>";
 
   tinyxml2::XMLDocument pluginDoc;
   pluginDoc.Parse(pluginStr);
   EXPECT_TRUE(app.LoadPlugin("MinimalScene",
       pluginDoc.FirstChildElement("plugin")));
+  EXPECT_TRUE(app.LoadPlugin("InteractiveViewControl"));
 
   // Get main window
   auto win = app.findChild<MainWindow *>();
@@ -130,7 +132,7 @@ TEST(MinimalSceneTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     QCoreApplication::processEvents();
-    sleep++;
+    ++sleep;
   }
   EXPECT_TRUE(receivedPreRenderEvent);
   EXPECT_TRUE(receivedRenderEvent);
@@ -157,9 +159,12 @@ TEST(MinimalSceneTest, IGN_UTILS_TEST_ENABLED_ONLY_ON_LINUX(Config))
 
   EXPECT_NEAR(60, camera->HFOV().Degree(), 1e-4);
 
+  EXPECT_EQ(rendering::CameraProjectionType::CPT_ORTHOGRAPHIC,
+            camera->ProjectionType());
+
   // Cleanup
   auto plugins = win->findChildren<Plugin *>();
-  EXPECT_EQ(1, plugins.size());
+  EXPECT_EQ(2, plugins.size());
 
   auto pluginName = plugins[0]->CardItem()->objectName().toStdString();
   EXPECT_TRUE(app.RemovePlugin(pluginName));

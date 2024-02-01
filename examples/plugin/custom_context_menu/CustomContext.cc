@@ -16,11 +16,11 @@
 */
 
 #include <iostream>
-#include <ignition/plugin/Register.hh>
+#include <gz/plugin/Register.hh>
 
 #include "CustomContext.hh"
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 
 /////////////////////////////////////////////////
@@ -35,5 +35,5 @@ CustomContext::~CustomContext()
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::CustomContext,
-                    ignition::gui::Plugin);
+IGNITION_ADD_PLUGIN(CustomContext,
+                    gui::Plugin);

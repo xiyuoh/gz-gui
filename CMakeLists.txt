@@ -3,17 +3,20 @@ cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
 #============================================================================
 # Initialize the project
 #============================================================================
-project(ignition-gui6 VERSION 6.4.0)
+project(ignition-gui6 VERSION 6.8.0)
 
 #============================================================================
 # Find ignition-cmake
 #============================================================================
-find_package(ignition-cmake2 2.8.0 REQUIRED)
+find_package(ignition-cmake2 2.14 REQUIRED)
 
 #============================================================================
 # Configure the project
 #============================================================================
-ign_configure_project(VERSION_SUFFIX)
+ign_configure_project(
+  REPLACE_IGNITION_INCLUDE_PATH gz/gui
+  VERSION_SUFFIX
+)
 
 #============================================================================
 # Set project-specific options
@@ -27,9 +30,7 @@ message(STATUS "\n\n-- ====== Finding Dependencies ======")
 
 #--------------------------------------
 # Find Protobuf
-set(REQ_PROTOBUF_VER 3)
 ign_find_package(IgnProtobuf
-                 VERSION ${REQ_PROTOBUF_VER}
                  REQUIRED
                  PRETTY Protobuf)
 
@@ -68,8 +69,11 @@ ign_find_package(ignition-msgs8 REQUIRED VERSION 8.2)
 set(IGN_MSGS_VER ${ignition-msgs8_VERSION_MAJOR})
 
 #--------------------------------------
-# Find if ign command is available
+# Find if command is available. This is used to enable tests.
+# Note that CLI files are installed regardless of whether the dependency is
+# available during build time
 find_program(HAVE_IGN_TOOLS ign)
+set (IGN_TOOLS_VER 1)
 
 #--------------------------------------
 # Find QT
@@ -84,7 +88,7 @@ ign_find_package (Qt5
 )
 
 set(IGNITION_GUI_PLUGIN_INSTALL_DIR
-  ${CMAKE_INSTALL_PREFIX}/${IGN_LIB_INSTALL_DIR}/ign-${IGN_DESIGNATION}-${PROJECT_VERSION_MAJOR}/plugins
+  ${CMAKE_INSTALL_PREFIX}/${IGN_LIB_INSTALL_DIR}/ign-${GZ_DESIGNATION}-${PROJECT_VERSION_MAJOR}/plugins
 )
 
 #============================================================================

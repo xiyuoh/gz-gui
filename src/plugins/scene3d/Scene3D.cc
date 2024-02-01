@@ -24,16 +24,16 @@
 #include <string>
 #include <vector>
 
-#include <ignition/common/Console.hh>
-#include <ignition/common/KeyEvent.hh>
-#include <ignition/common/MouseEvent.hh>
-#include <ignition/plugin/Register.hh>
-#include <ignition/common/MeshManager.hh>
+#include <gz/common/Console.hh>
+#include <gz/common/KeyEvent.hh>
+#include <gz/common/MouseEvent.hh>
+#include <gz/plugin/Register.hh>
+#include <gz/common/MeshManager.hh>
 
-#include <ignition/rendering/Capsule.hh>
+#include <gz/rendering/Capsule.hh>
 
-#include <ignition/math/Vector2.hh>
-#include <ignition/math/Vector3.hh>
+#include <gz/math/Vector2.hh>
+#include <gz/math/Vector3.hh>
 
 // TODO(louise) Remove these pragmas once ign-rendering and ign-msgs
 // are disabling the warnings
@@ -42,23 +42,23 @@
 #endif
 #include <ignition/msgs.hh>
 
-#include <ignition/rendering/Camera.hh>
-#include <ignition/rendering/OrbitViewController.hh>
-#include <ignition/rendering/RayQuery.hh>
-#include <ignition/rendering/RenderEngine.hh>
-#include <ignition/rendering/RenderingIface.hh>
-#include <ignition/rendering/Scene.hh>
+#include <gz/rendering/Camera.hh>
+#include <gz/rendering/OrbitViewController.hh>
+#include <gz/rendering/RayQuery.hh>
+#include <gz/rendering/RenderEngine.hh>
+#include <gz/rendering/RenderingIface.hh>
+#include <gz/rendering/Scene.hh>
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#include <ignition/transport/Node.hh>
+#include <gz/transport/Node.hh>
 
-#include "ignition/gui/Application.hh"
-#include "ignition/gui/Conversions.hh"
-#include "ignition/gui/GuiEvents.hh"
-#include "ignition/gui/MainWindow.hh"
+#include "gz/gui/Application.hh"
+#include "gz/gui/Conversions.hh"
+#include "gz/gui/GuiEvents.hh"
+#include "gz/gui/MainWindow.hh"
 
 namespace ignition
 {
@@ -201,7 +201,7 @@ namespace plugins
 
     /// \brief Transport node for making service request and subscribing to
     /// pose topic
-    private: ignition::transport::Node node;
+    private: gz::transport::Node node;
   };
 
   /// \brief Private data class for IgnRenderer
@@ -265,7 +265,7 @@ namespace plugins
 }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 using namespace plugins;
 
@@ -749,8 +749,8 @@ rendering::GeometryPtr SceneManager::LoadGeometry(const msgs::Geometry &_msg,
     // Assume absolute path to mesh file
     descriptor.meshName = _msg.mesh().filename();
 
-    ignition::common::MeshManager* meshManager =
-        ignition::common::MeshManager::Instance();
+    common::MeshManager* meshManager =
+        common::MeshManager::Instance();
     descriptor.mesh = meshManager->Load(descriptor.meshName);
     geom = this->scene->CreateMesh(descriptor);
 
@@ -903,11 +903,11 @@ void IgnRenderer::Render()
   // update and render to texture
   this->dataPtr->camera->Update();
 
-  if (ignition::gui::App())
+  if (gui::App())
   {
-    ignition::gui::App()->sendEvent(
-        ignition::gui::App()->findChild<ignition::gui::MainWindow *>(),
-        new gui::events::Render());
+    gui::App()->sendEvent(
+        gui::App()->findChild<MainWindow *>(),
+        new events::Render());
   }
 }
 
@@ -1124,7 +1124,7 @@ std::string IgnRenderer::Initialize()
     std::map<std::string, std::string> params;
     params["useCurrentGLContext"] = "1";
     params["winID"] = std::to_string(
-        ignition::gui::App()->findChild<ignition::gui::MainWindow *>()->
+        gz::gui::App()->findChild<gz::gui::MainWindow *>()->
         QuickWindow()->winId());
     engine = rendering::engine(this->engineName, params);
   }
@@ -1388,7 +1388,7 @@ void TextureNode::PrepareNode()
         newId, sz, QQuickWindow::TextureIsOpaque);
 #else
     // TODO(anyone) Use createTextureFromNativeObject
-    // https://github.com/ignitionrobotics/ign-gui/issues/113
+    // https://github.com/gazebosim/gz-gui/issues/113
 #ifndef _WIN32
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -1684,7 +1684,7 @@ void Scene3D::LoadConfig(const tinyxml2::XMLElement *_pluginElem)
 }
 
 /////////////////////////////////////////////////
-void RenderWindowItem::OnHovered(const ignition::math::Vector2i &_hoverPos)
+void RenderWindowItem::OnHovered(const math::Vector2i &_hoverPos)
 {
   this->dataPtr->renderThread->ignRenderer.NewHoverEvent(_hoverPos);
 }
@@ -1823,5 +1823,5 @@ void Scene3D::SetLoadingError(const QString &_loadingError)
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::plugins::Scene3D,
-                    ignition::gui::Plugin)
+IGNITION_ADD_PLUGIN(Scene3D,
+                    gui::Plugin)

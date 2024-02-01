@@ -19,15 +19,15 @@
 
 #include <string>
 
-#include <ignition/common/Console.hh>
-#include <ignition/common/Time.hh>
-#include <ignition/common/StringUtils.hh>
-#include <ignition/plugin/Register.hh>
+#include <gz/common/Console.hh>
+#include <gz/common/Time.hh>
+#include <gz/common/StringUtils.hh>
+#include <gz/plugin/Register.hh>
 
-#include "ignition/gui/Application.hh"
-#include "ignition/gui/Helpers.hh"
-#include "ignition/gui/GuiEvents.hh"
-#include "ignition/gui/MainWindow.hh"
+#include "gz/gui/Application.hh"
+#include "gz/gui/Helpers.hh"
+#include "gz/gui/GuiEvents.hh"
+#include "gz/gui/MainWindow.hh"
 
 namespace ignition
 {
@@ -39,10 +39,10 @@ namespace plugins
   {
     /// \brief Send the world control event or call the control service.
     /// \param[in] _msg Message to send.
-    public: void SendEventMsg(const ignition::msgs::WorldControl &_msg);
+    public: void SendEventMsg(const gz::msgs::WorldControl &_msg);
 
     /// \brief Message holding latest world statistics
-    public: ignition::msgs::WorldStatistics msg;
+    public: gz::msgs::WorldStatistics msg;
 
     /// \brief Service to send world control requests
     public: std::string controlService;
@@ -51,7 +51,7 @@ namespace plugins
     public: std::recursive_mutex mutex;
 
     /// \brief Communication node
-    public: ignition::transport::Node node;
+    public: gz::transport::Node node;
 
     /// \brief The multi step value
     public: unsigned int multiStep = 1u;
@@ -65,14 +65,14 @@ namespace plugins
 
     /// \brief Whether server communication should occur through an event (true)
     /// or service (false). The service option is used by default for
-    /// ign-gui6, and should be changed to use the event by default in ign-gui7.
+    /// gz-gui6, and should be changed to use the event by default in gz-gui7.
     public: bool useEvent{false};
   };
 }
 }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 using namespace plugins;
 
@@ -276,7 +276,7 @@ void WorldControl::ProcessMsg()
 }
 
 /////////////////////////////////////////////////
-void WorldControl::OnWorldStatsMsg(const ignition::msgs::WorldStatistics &_msg)
+void WorldControl::OnWorldStatsMsg(const msgs::WorldStatistics &_msg)
 {
   std::lock_guard<std::recursive_mutex> lock(this->dataPtr->mutex);
 
@@ -287,7 +287,7 @@ void WorldControl::OnWorldStatsMsg(const ignition::msgs::WorldStatistics &_msg)
 /////////////////////////////////////////////////
 void WorldControl::OnPlay()
 {
-  ignition::msgs::WorldControl msg;
+  msgs::WorldControl msg;
   msg.set_pause(false);
   this->dataPtr->pause = false;
   this->dataPtr->SendEventMsg(msg);
@@ -296,7 +296,7 @@ void WorldControl::OnPlay()
 /////////////////////////////////////////////////
 void WorldControl::OnPause()
 {
-  ignition::msgs::WorldControl msg;
+  msgs::WorldControl msg;
   msg.set_pause(true);
   this->dataPtr->pause = true;
 
@@ -312,7 +312,7 @@ void WorldControl::OnStepCount(const unsigned int _steps)
 /////////////////////////////////////////////////
 void WorldControl::OnStep()
 {
-  ignition::msgs::WorldControl msg;
+  msgs::WorldControl msg;
   msg.set_pause(this->dataPtr->pause);
   msg.set_multi_step(this->dataPtr->multiStep);
 
@@ -320,7 +320,7 @@ void WorldControl::OnStep()
 }
 
 /////////////////////////////////////////////////
-void WorldControlPrivate::SendEventMsg(const ignition::msgs::WorldControl &_msg)
+void WorldControlPrivate::SendEventMsg(const msgs::WorldControl &_msg)
 {
   if (this->useEvent)
   {
@@ -329,8 +329,8 @@ void WorldControlPrivate::SendEventMsg(const ignition::msgs::WorldControl &_msg)
   }
   else
   {
-    std::function<void(const ignition::msgs::Boolean &, const bool)> cb =
-        [](const ignition::msgs::Boolean &/*_rep*/, const bool /*_result*/)
+    std::function<void(const msgs::Boolean &, const bool)> cb =
+        [](const msgs::Boolean &/*_rep*/, const bool /*_result*/)
     {
       // the service CB is empty because updates are handled in
       // WorldControl::ProcessMsg
@@ -340,5 +340,5 @@ void WorldControlPrivate::SendEventMsg(const ignition::msgs::WorldControl &_msg)
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::plugins::WorldControl,
-                    ignition::gui::Plugin)
+IGNITION_ADD_PLUGIN(WorldControl,
+                    gui::Plugin)

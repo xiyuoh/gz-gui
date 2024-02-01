@@ -24,14 +24,14 @@
 #include <string>
 #include <vector>
 
-#include <ignition/gui/Application.hh>
+#include <gz/gui/Application.hh>
 
-#include <ignition/transport/MessageInfo.hh>
-#include <ignition/transport/Node.hh>
-#include <ignition/transport/Publisher.hh>
+#include <gz/transport/MessageInfo.hh>
+#include <gz/transport/Node.hh>
+#include <gz/transport/Publisher.hh>
 
-#include <ignition/common/Console.hh>
-#include <ignition/plugin/Register.hh>
+#include <gz/common/Console.hh>
+#include <gz/plugin/Register.hh>
 #include "TopicViewer.hh"
 
 #define NAME_KEY "name"
@@ -73,7 +73,7 @@ namespace plugins
   class TopicViewerPrivate
   {
     /// \brief Node for Commincation
-    public: ignition::transport::Node node;
+    public: gz::transport::Node node;
 
     /// \brief Model to create it from the available topics and messages
     public: TopicsModel *model;
@@ -146,7 +146,7 @@ namespace plugins
 }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 using namespace plugins;
 
@@ -163,7 +163,7 @@ TopicViewer::TopicViewer() : Plugin(), dataPtr(new TopicViewerPrivate)
 
   this->dataPtr->CreateModel();
 
-  ignition::gui::App()->Engine()->rootContext()->setContextProperty(
+  gui::App()->Engine()->rootContext()->setContextProperty(
                 "TopicsModel", this->dataPtr->model);
 
   this->dataPtr->timer = new QTimer();
@@ -199,7 +199,7 @@ void TopicViewerPrivate::CreateModel()
 
   for (unsigned int i = 0; i < topics.size(); ++i)
   {
-    std::vector<ignition::transport::MessagePublisher> infoMsgs;
+    std::vector<transport::MessagePublisher> infoMsgs;
     this->node.TopicInfo(topics[i], infoMsgs);
     std::string msgType = infoMsgs[0].MsgTypeName();
     this->AddTopic(topics[i], msgType);
@@ -241,7 +241,7 @@ void TopicViewerPrivate::AddField(QStandardItem *_parentItem,
     _parentItem->appendRow(msgItem);
   }
 
-  auto msg = ignition::msgs::Factory::New(_msgType);
+  auto msg = msgs::Factory::New(_msgType);
   if (!msg)
   {
       ignwarn << "Null Msg: " << _msgType << std::endl;
@@ -384,7 +384,7 @@ void TopicViewer::UpdateModel()
   for (unsigned int i = 0; i < topics.size(); ++i)
   {
     // get the msg type
-    std::vector<ignition::transport::MessagePublisher> infoMsgs;
+    std::vector<transport::MessagePublisher> infoMsgs;
     this->dataPtr->node.TopicInfo(topics[i], infoMsgs);
     std::string msgType = infoMsgs[0].MsgTypeName();
 
@@ -425,5 +425,5 @@ void TopicViewer::UpdateModel()
 
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::plugins::TopicViewer,
-                    ignition::gui::Plugin)
+IGNITION_ADD_PLUGIN(TopicViewer,
+                    gui::Plugin)

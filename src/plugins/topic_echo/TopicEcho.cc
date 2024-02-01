@@ -16,11 +16,11 @@
 */
 
 #include <iostream>
-#include <ignition/common/Console.hh>
-#include <ignition/plugin/Register.hh>
-#include <ignition/transport/Node.hh>
+#include <gz/common/Console.hh>
+#include <gz/plugin/Register.hh>
+#include <gz/transport/Node.hh>
 
-#include "ignition/gui/Application.hh"
+#include "gz/gui/Application.hh"
 #include "TopicEcho.hh"
 
 namespace ignition
@@ -48,13 +48,13 @@ namespace plugins
     public: std::mutex mutex;
 
     /// \brief Node for communication
-    public: ignition::transport::Node node;
+    public: gz::transport::Node node;
   };
 }
 }
 }
 
-using namespace ignition;
+using namespace gz;
 using namespace gui;
 using namespace plugins;
 
@@ -178,6 +178,5 @@ void TopicEcho::SetPaused(const bool &_paused)
 }
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(ignition::gui::plugins::TopicEcho,
-                    ignition::gui::Plugin)
-
+IGNITION_ADD_PLUGIN(TopicEcho,
+                    gui::Plugin)
